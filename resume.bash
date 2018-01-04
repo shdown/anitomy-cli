@@ -2,6 +2,12 @@
 
 ANITOMY_CLI=~/repo/anitomy-cli/anitomy-cli
 
+if (( $# != 1 )); then
+    echo >&2 "USAGE: ${0##*/} <directory>"
+    exit 2
+fi
+cd -- "$1" || exit $?
+
 files=()
 while IFS= read -rd '' file; do
     files+=("$file")
