@@ -10,7 +10,11 @@ cd -- "$1" || exit $?
 
 files=()
 while IFS= read -rd '' file; do
-    files+=("$file")
+    # When saving watch-later config files, mpv simply concatenates the current directory with file
+    # name (unless it is absolute), so "/videos/file.mkv" and "/videos/./file.mkv" are two different
+    # files for mpv.
+    # Let's drop the initial "./" appended by find.
+    files+=("${file#./}")
 done < <(
     find -type f -regextype posix-extended -iregex '.*\.(mkv|mp4)' -print0 \
         | $ANITOMY_CLI -z sort)
