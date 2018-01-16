@@ -13,7 +13,7 @@ static struct {
     wchar_t delimiter = L'\n';
 } options;
 
-class Info {
+class ExtractedInfo {
     std::vector<std::wstring> episode_;
     std::vector<std::wstring> season_;
     std::vector<std::wstring> volume_;
@@ -34,7 +34,7 @@ class Info {
     }
 
 public:
-    Info(const anitomy::Elements &elems)
+    ExtractedInfo(const anitomy::Elements &elems)
         : episode_(elems.get_all(anitomy::kElementEpisodeNumber))
         , season_()
         , volume_()
@@ -54,7 +54,7 @@ public:
             !volume_.empty();
     }
 
-    bool operator <(const Info &that) const {
+    bool operator <(const ExtractedInfo &that) const {
         if (int r = compare_wstr_vectors_(volume_, that.volume_)) {
              return r < 0;
         }
@@ -67,7 +67,7 @@ public:
         return false;
     }
 
-    bool operator ==(const Info &that) const {
+    bool operator ==(const ExtractedInfo &that) const {
         return
             episode_ == that.episode_ &&
             season_ == that.season_ &&
@@ -96,13 +96,13 @@ static bool do_attach() {
         videos.emplace_back(line);
     }
 
-    std::vector<std::pair<Info,std::wstring>> subs;
+    std::vector<std::pair<ExtractedInfo,std::wstring>> subs;
 
     for (std::wstring line; std::getline(std::wcin, line, options.delimiter) && !line.empty();) {
         if (!anitomy.Parse(wbasename(line))) {
             continue;
         }
-        Info info(anitomy.elements());
+        ExtractedInfo info(anitomy.elements());
         if (!info) {
             continue;
         }
@@ -126,11 +126,11 @@ static bool do_attach() {
         if (!anitomy.Parse(wbasename(video))) {
             continue;
         }
-        Info info(anitomy.elements());
+        ExtractedInfo info(anitomy.elements());
         if (!info) {
             continue;
         }
-        std::pair<Info,std::wstring> p(
+        std::pair<ExtractedInfo,std::wstring> p(
             std::move(info),
             std::wstring() // empty string is always less or equal to anything
         );
@@ -151,7 +151,7 @@ static bool do_sort() {
     anitomy.options().parse_file_extension = false;
     anitomy.options().parse_release_group = false;
 
-    std::vector<std::pair<Info,std::wstring>> parsed;
+    std::vector<std::pair<ExtractedInfo,std::wstring>> parsed;
     std::vector<std::wstring> unparseable;
 
     for (std::wstring line; std::getline(std::wcin, line, options.delimiter);) {
@@ -159,7 +159,7 @@ static bool do_sort() {
             unparseable.emplace_back(line);
             continue;
         }
-        parsed.emplace_back(Info(anitomy.elements()), line);
+        parsed.emplace_back(ExtractedInfo(anitomy.elements()), line);
     }
 
     std::sort(parsed.begin(), parsed.end());
