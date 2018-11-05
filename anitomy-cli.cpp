@@ -3,9 +3,9 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
-#include <cstdlib> // exit, EXIT_SUCCESS, EXIT_FAILURE
+#include <stdlib.h> // size_t, exit, EXIT_SUCCESS, EXIT_FAILURE
 #include <unistd.h> // getopt
-#include <cstring> // strcmp
+#include <string.h> // strcmp
 
 static struct {
     bool extract_season = false;
@@ -22,10 +22,10 @@ class ExtractedInfo {
         const std::vector<std::wstring> &a,
         const std::vector<std::wstring> &b)
     {
-        const auto na = a.size();
-        const auto nb = b.size();
-        const auto nmin = std::min(na, nb);
-        for (decltype(a.size()) i = 0; i < nmin; ++i) {
+        const size_t na = a.size();
+        const size_t nb = b.size();
+        const size_t nmin = std::min(na, nb);
+        for (size_t i = 0; i < nmin; ++i) {
             if (int r = a[i].compare(b[i])) {
                 return r;
             }
@@ -80,7 +80,7 @@ static std::wstring wbasename(const std::wstring &s) {
     if (i == std::wstring::npos) {
         return s.empty() ? L"." : L"/";
     }
-    const auto from = 1 + s.find_last_of(L"/", i); /* std::wstring::npos + 1 == 0 */
+    const auto from = 1 + s.find_last_of(L"/", i); /* 1 + std::wstring::npos == 0 */
     return s.substr(from, i - from + 1);
 }
 
