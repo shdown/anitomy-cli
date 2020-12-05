@@ -3,7 +3,7 @@ ONAMAE := anitomy-cli
 ANITOMY_DIR := anitomy
 ANITOMY_OBJ := $(notdir $(patsubst %.cpp,%.o,$(wildcard $(ANITOMY_DIR)/anitomy/*.cpp)))
 
-CXXFLAGS := -std=c++11 -O2 -pedantic -Wall -Wextra
+CXXFLAGS := -O2 -Wall -Wextra
 CPPFLAGS := -I$(ANITOMY_DIR)
 
 $(ONAMAE): $(ONAMAE).o $(ANITOMY_OBJ)
